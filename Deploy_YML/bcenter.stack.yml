@@ -1,0 +1,42 @@
+# Usage : docker stack deploy -c zookeeper.stack.yml gb
+
+version: "3"
+
+networks:
+    gb-net:
+        external: true
+
+volumes:
+    acenter_R:
+    acenter_A:
+
+services:
+    gb_bcenter_R:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "82:80"
+        volumes:
+            - acenter_R:/etc/nginx/
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.labels.type == gb_Trace
+#            restart_policy:
+#                    condition: on-failure
+
+    gb_bcenter_A:
+        image: hub:5000/gb-tomcat-jre8:7.0.67
+        networks:
+            - gb-net
+        volumes:
+            - acenter_A:/etc/tomcat/
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.labels.type == gb_APP
+#            restart_policy:
+#                    condition: on-failure

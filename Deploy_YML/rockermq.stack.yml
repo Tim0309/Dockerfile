@@ -1,0 +1,132 @@
+# Run : docker stack deploy -c rockermq.stack.yml gb
+version: "3"
+
+networks:
+    gb-net:
+        external: true
+
+services:
+    namesrv:
+        image: hub:5000/gb-rocketmq:4.0.0
+        networks:
+            - gb-net
+        command: mqnamesrv -n namesrv:9876
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    # 部署在指定的节点
+                    - node.labels.type == gb_APP
+            restart_policy:
+                    condition: on-failure
+
+#  ====  MQ001  ====
+    001_m:
+        image: hub:5000/gb-rocketmq:4.0.0
+        networks:
+            - gb-net
+        environment:
+            # 主=备 (brokerName相同表示同一组)
+            - brokerName=MQ_001
+            # 主=0, 备≠0
+            - brokerId=0
+            # 主=SYNC_MASTER; 备=SLAVE
+            - brokerRole=SYNC_MASTER
+            - namesrvAddr=MQ_namesrv:9876
+        command: mqbroker -c /rocketmq.conf -n namesrv:9876
+        deploy:
+            placement:
+                constraints:
+                    # 部署在指定的节点
+                    - node.hostname == A1
+            restart_policy:
+                    condition: on-failure
+
+    001_s:
+        image: hub:5000/gb-rocketmq:4.0.0
+        networks:
+            - gb-net
+        environment:
+            - brokerName=MQ_001
+            - brokerId=1
+            - brokerRole=SLAVE
+            - namesrvAddr=MQ_namesrv:9876
+        command: mqbroker -c /rocketmq.conf -n namesrv:9876
+        deploy:
+            placement:
+                constraints:
+                    - node.hostname == A2
+            restart_policy:
+                    condition: on-failure
+
+#  ====  MQ002  ====
+    002_m:
+        image: hub:5000/gb-rocketmq:4.0.0
+        networks:
+            - gb-net
+        environment:
+            - brokerName=MQ_002
+            - brokerId=0
+            - brokerRole=SYNC_MASTER
+            - namesrvAddr=MQ_namesrv:9876
+        command: mqbroker -c /rocketmq.conf -n namesrv:9876
+        deploy:
+            placement:
+                constraints:
+                    - node.hostname == A2
+            restart_policy:
+                    condition: on-failure
+
+    002_s:
+        image: hub:5000/gb-rocketmq:4.0.0
+        networks:
+            - gb-net
+        environment:
+            - brokerName=MQ_002
+            - brokerId=1
+            - brokerRole=SLAVE
+            - namesrvAddr=MQ_namesrv:9876
+        command: mqbroker -c /rocketmq.conf -n namesrv:9876
+        deploy:
+            placement:
+                constraints:
+                    - node.hostname == A3
+            restart_policy:
+                    condition: on-failure
+
+#  ====  MQ003  ====
+    003_m:
+        image: hub:5000/gb-rocketmq:4.0.0
+        networks:
+            - gb-net
+        environment:
+            - brokerName=MQ_003
+            - brokerId=0
+            - brokerRole=SYNC_MASTER
+            - namesrvAddr=MQ_namesrv:9876
+        command: mqbroker -c /rocketmq.conf -n namesrv:9876
+        deploy:
+            placement:
+                constraints:
+                    - node.hostname == A3
+            restart_policy:
+                    condition: on-failure
+
+    003_s:
+        image: hub:5000/gb-rocketmq:4.0.0
+        networks:
+            - gb-net
+        environment:
+            - brokerName=MQ_003
+            - brokerId=1
+            - brokerRole=SLAVE
+            - namesrvAddr=MQ_namesrv:9876
+        command: mqbroker -c /rocketmq.conf -n namesrv:9876
+        deploy:
+            placement:
+                constraints:
+                    - node.hostname == A1
+            restart_policy:
+                    condition: on-failure
+
+

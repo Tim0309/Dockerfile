@@ -1,0 +1,175 @@
+# Usage : docker stack deploy -c zookeeper.stack.yml gb
+
+version: "3"
+
+networks:
+    gb-net:
+        external: true
+
+services:
+    gb_msites:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "81:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_pcenter:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "82:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_tcenter:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "83:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_acenter:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "84:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_mdcenter:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "85:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_boss:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "86:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_ccenter:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "87:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_mcenter:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "88:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_rcenter:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "89:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_api:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "90:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+    gb_fserver:
+        image: hub:5000/gb-nginx:1.11.13
+        networks:
+            - gb-net
+        ports:
+            - "91:80"
+        deploy:
+            replicas: 3
+            placement:
+                constraints:
+                    - node.hostname == R1
+                    - node.hostname == R2
+            restart_policy:
+                    condition: on-failure
+
+
